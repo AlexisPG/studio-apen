@@ -24,12 +24,12 @@ export default function WorkshopPage() {
     inspirations,
     tier,
     level,
-    prompt,
+    promptText,
     outputs,
     selectedOutputId,
     setTier,
     setLevel,
-    setPrompt,
+    setPromptText,
     addInspiration,
     removeInspiration,
     reorderInspiration,
@@ -40,7 +40,7 @@ export default function WorkshopPage() {
   } = useSessionStore();
 
   const selected = outputs.find((output) => output.id === selectedOutputId) ?? null;
-  const compiledPrompt = buildPrompt(prompt, tier, level, inspirations.length);
+  const compiledPrompt = buildPrompt(promptText, tier, level, inspirations.length);
 
   const handleGenerate = () => {
     const generated = mockGenerate(compiledPrompt, tier, level);
@@ -57,7 +57,7 @@ export default function WorkshopPage() {
         onReorder={reorderInspiration}
       />
       <TierLevelSelector tier={tier} level={level} onTierChange={setTier} onLevelChange={setLevel} />
-      <PromptEditor prompt={prompt} onChange={setPrompt} />
+      <PromptEditor prompt={promptText} onChange={setPromptText} />
       <PromptPreview prompt={compiledPrompt} />
       <button
         type="button"

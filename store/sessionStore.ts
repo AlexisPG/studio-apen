@@ -23,12 +23,15 @@ type SessionState = {
   inspirations: string[];
   tier: Tier;
   level: Level;
-  prompt: string;
+  promptText: string;
+  isPromptLibraryOpen: boolean;
   outputs: OutputImage[];
   selectedOutputId: string | null;
   setTier: (tier: Tier) => void;
   setLevel: (level: Level) => void;
-  setPrompt: (prompt: string) => void;
+  setPromptText: (promptText: string) => void;
+  togglePromptLibrary: () => void;
+  closePromptLibrary: () => void;
   addInspiration: (dataUrl: string) => void;
   removeInspiration: (index: number) => void;
   reorderInspiration: (from: number, to: number) => void;
@@ -45,12 +48,18 @@ export const useSessionStore = create<SessionState>()(
       inspirations: [],
       tier: 'A',
       level: 'L1',
-      prompt: '',
+      promptText: '',
+      isPromptLibraryOpen: false,
       outputs: [],
       selectedOutputId: null,
       setTier: (tier) => set({ tier }),
       setLevel: (level) => set({ level }),
-      setPrompt: (prompt) => set({ prompt }),
+      setPromptText: (promptText) => set({ promptText }),
+      togglePromptLibrary: () =>
+        set((state) => ({
+          isPromptLibraryOpen: !state.isPromptLibraryOpen
+        })),
+      closePromptLibrary: () => set({ isPromptLibraryOpen: false }),
       addInspiration: (dataUrl) =>
         set((state) => {
           if (state.inspirations.length >= 10) return state;
@@ -88,7 +97,16 @@ export const useSessionStore = create<SessionState>()(
     }),
     {
       name: 'studio-apen-session',
-      storage: createJSONStorage(() => localStorage)
+      storage: createJSONStorage(() => localStorage),
+      merge: (persistedState, currentState) => {
+        const typed = (persistedState as Partial<SessionState> & { prompt?: string }) || {};
+        return {
+          ...currentState,
+          ...typed,
+          promptText: typed.promptText ?? typed.prompt ?? currentState.promptText,
+          isPromptLibraryOpen: false
+        };
+      }
     }
   )
 );

@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from 'next/font/google';
 import '@/styles/globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import PromptLibraryPanel from '@/components/PromptLibraryPanel';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' });
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable} bg-canvas text-ink font-sans`}>
         <Header />
+        <PromptLibraryPanel />
         <main className="min-h-screen px-4 pb-24 pt-20 md:px-6">{children}</main>
         <Footer />
       </body>
